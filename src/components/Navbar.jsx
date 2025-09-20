@@ -1,10 +1,25 @@
+import axios from "axios";
 import React from "react";
 import { useSelector } from "react-redux";
-
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 const Navbar = () => {
   const userData = useSelector((store) => store.user);
   console.log(userData);
-
+  const handleLogout = async () => {
+    try {
+      const result = await axios.post(
+        "http://localhost:1001/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      toast.success(result.data.message);
+    } catch (error) {
+      toast.error("An error Occured!");
+    }
+  };
   return (
     <div className="navbar bg-white shadow-sm">
       <div className="flex-1">
@@ -43,7 +58,9 @@ const Navbar = () => {
               <a>Settings</a>
             </li>
             <li>
-              <a>Logout</a>
+              <Link to="/login" onClick={handleLogout}>
+                Logout
+              </Link>
             </li>
           </ul>
         </div>
