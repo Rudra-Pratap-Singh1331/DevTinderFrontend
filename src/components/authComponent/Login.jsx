@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../store/userSlice";
-
+import { toast } from "react-toastify";
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -13,8 +13,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [formError, setFormError] = useState(null);
   const dispatch = useDispatch();
-  
- 
 
   const onChangeHandlerForm = (e) => {
     const { name, value } = e.target;
@@ -37,8 +35,10 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      dispatch(addUser(API_RESULT));// successful login → redirect
-      navigate("/")
+      toast.success("Login Success!");
+      console.log(API_RESULT.data);
+      dispatch(addUser(API_RESULT)); // successful login → redirect
+      navigate("/");
     } catch (err) {
       setFormError(err.response.data);
       console.log(formError);

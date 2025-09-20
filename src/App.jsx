@@ -4,7 +4,7 @@ import SignUp from "./components/authComponent/SignUp";
 import Login from "./components/authComponent/Login";
 import { Provider } from "react-redux";
 import appStore from "./store/appStore";
-
+import { ToastContainer } from "react-toastify";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -25,6 +25,7 @@ const App = () => {
     <>
       <Provider store={appStore}>
         <RouterProvider router={router} />
+        <ToastContainer position="top-right" autoClose={3000} />
       </Provider>
     </>
   );
