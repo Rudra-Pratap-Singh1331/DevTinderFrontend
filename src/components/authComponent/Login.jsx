@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../store/userSlice";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,9 @@ const Login = () => {
 
   const navigate = useNavigate();
   const [formError, setFormError] = useState(null);
+  const dispatch = useDispatch();
+  
+ 
 
   const onChangeHandlerForm = (e) => {
     const { name, value } = e.target;
@@ -32,8 +37,8 @@ const Login = () => {
           withCredentials: true,
         }
       );
-
-      navigate("/"); // successful login → redirect
+      dispatch(addUser(API_RESULT));// successful login → redirect
+      navigate("/")
     } catch (err) {
       setFormError(err.response.data);
       console.log(formError);
@@ -74,7 +79,6 @@ const Login = () => {
                 onChange={onChangeHandlerForm}
                 required
               />
-            
             </div>
 
             {/* Password */}
@@ -91,7 +95,6 @@ const Login = () => {
                 onChange={onChangeHandlerForm}
                 required
               />
-              
             </div>
 
             {/* Submit */}
