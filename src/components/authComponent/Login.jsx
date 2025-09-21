@@ -36,7 +36,7 @@ const Login = () => {
         }
       );
       toast.success("Login Success!");
-      console.log(API_RESULT);
+
       dispatch(addUser(API_RESULT.data)); // successful login → redirect
       if (API_RESULT.data.profileUpdateStatus === true) {
         navigate("/");
@@ -45,7 +45,7 @@ const Login = () => {
       }
     } catch (err) {
       setFormError(err.response.data);
-      console.log(formError);
+   
     }
   };
 

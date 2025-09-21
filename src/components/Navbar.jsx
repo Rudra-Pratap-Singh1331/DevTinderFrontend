@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 const Navbar = () => {
   const userData = useSelector((store) => store.user);
-  console.log(userData);
   const handleLogout = async () => {
     try {
       const result = await axios.post(
@@ -52,7 +51,9 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-white rounded-box z-1 mt-3 w-52 p-2 shadow text-black"
           >
             <li>
-              <a className="justify-between">Profile</a>
+              <Link to="/updateprofile" className="justify-between">
+                Profile
+              </Link>
             </li>
             <li>
               <a>Settings</a>

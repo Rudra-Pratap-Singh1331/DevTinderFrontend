@@ -38,7 +38,6 @@ const UpdateProfile = () => {
         toast.error("Unauthorized!");
         navigate("/login");
       }
-      console.log(error);
     }
   };
 

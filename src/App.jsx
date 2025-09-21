@@ -5,6 +5,9 @@ import Login from "./components/authComponent/Login";
 import { Provider } from "react-redux";
 import appStore from "./store/appStore";
 import { ToastContainer } from "react-toastify";
+import Feed from "./components/Feed";
+import Profile from "./components/UserProfile/Profile";
+import UpdateProfile from "./components/UserProfile/Profile";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -16,9 +19,18 @@ const App = () => {
       element: <Login />,
     },
     {
+      path: "/updateprofile",
+      element: <UpdateProfile />,
+    },
+    {
       path: "/",
       element: <Body />,
-      children: [],
+      children: [
+        {
+          path: "/",
+          element: <Feed />,
+        },
+      ],
     },
   ]);
   return (
