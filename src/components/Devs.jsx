@@ -33,7 +33,6 @@ const Devs = () => {
       const devs = await axios.get("http://localhost:1001/user/feed", {
         withCredentials: true,
       });
-      console.log(devs?.data?.UsersToBeShowOnTheFeed);
       setFeed(devs?.data?.UsersToBeShowOnTheFeed);
     } catch (error) {
       if (error.response.status === 401) {
