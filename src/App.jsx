@@ -9,6 +9,7 @@ import Feed from "./components/Feed";
 import Profile from "./components/UserProfile/Profile";
 import UpdateProfile from "./components/UserProfile/Profile";
 import MainComponent from "./components/MainComponent";
+import Devs from "./components/Devs";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const App = () => {
         {
           path: "/",
           element: <MainComponent />,
+        },
+        {
+          path: "/devs",
+          element: <Devs />,
         },
       ],
     },

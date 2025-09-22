@@ -22,7 +22,7 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="navbar bg-white shadow-md px-6 py-3">
+    <div className="navbar bg-white shadow-sm px-6 py-3">
       {/* Left Section */}
       <div className="flex-1 items-center flex gap-6">
         <Link to="/" className="text-2xl font-bold text-blue-700">
@@ -35,13 +35,13 @@ const Navbar = () => {
       {/* Right Section */}
       <div className="flex items-center gap-10">
         <Link
-          to="/showhackathons"
+          to="/hackathons"
           className="flex items-center gap-1 text-gray-800 hover:text-blue-700 font-medium"
         >
           <FaHammer /> Hackathons
         </Link>
         <Link
-          to="/showdevs"
+          to="/devs"
           className="flex items-center gap-1 text-gray-800 hover:text-blue-700 font-medium"
         >
           <FaCode /> Devs
