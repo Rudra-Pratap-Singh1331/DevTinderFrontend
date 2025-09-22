@@ -158,6 +158,7 @@ const UpdateProfile = () => {
               value={user.gender}
               onChange={handleChange}
               className="select select-bordered w-full bg-white text-black"
+              required
             >
               <option value="">Select Gender</option>
               <option value="Male">Male</option>

@@ -62,7 +62,7 @@ const Login = () => {
         {/* Centered Form */}
         <div className="flex flex-1 items-center justify-center">
           <form
-            className="flex flex-col gap-6 p-10 bg-white border rounded-2xl shadow-lg w-[420px]"
+            className="flex flex-col gap-6 p-10 bg-white  rounded-2xl shadow-lg w-[420px]"
             onSubmit={handleOnSubmit}
           >
             <h2 className="text-2xl font-semibold text-gray-900 text-center">
