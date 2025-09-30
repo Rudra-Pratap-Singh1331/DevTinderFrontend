@@ -1,17 +1,16 @@
-import io from "socket.io-client";
+// socketService.js
+import { io } from "socket.io-client";
 
-let socket;
+export const createSocket = () => {
+  // Always create a fresh socket instance
+  const socket = io("http://localhost:1001", { withCredentials: true });
 
-export const socketConnection = () => {
-  if (!socket) {
-    socket = io("http://localhost:1001", { withCredentials: true });
-  }
-  return socket; // hamesha return karo
-};
+  // Optional: return cleanup function if needed
+  const disconnect = () => {
+    if (socket) {
+      socket.disconnect();
+    }
+  };
 
-export const disconnect = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
+  return { socket, disconnect };
 };
