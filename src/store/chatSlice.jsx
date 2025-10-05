@@ -7,7 +7,7 @@ const chatSlice = createSlice({
     addChat: (state, action) => {
       return action.payload;
     },
-    removeChat: (state, action) => {
+    removeChat: () => {
       return null;
     },
   },

@@ -1,11 +1,40 @@
+import axios from "axios";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-
-const LeftSideBar = ({ friends }) => {
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { addFriends } from "../store/friendSlice";
+import { AVATAR_DEFAULT_URL } from "../constant/constant";
+import { addChat } from "../store/chatSlice";
+// import { createSocket } from "../constant/socketConnection";
+const LeftSideBar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const friendList = useSelector((store) => store.friendList);
   console.log(friendList);
+  const fetchFreindList = async () => {
+    try {
+      const result = await axios.get("http://localhost:1001/user/friends", {
+        withCredentials: true,
+      });
+      dispatch(addFriends(result?.data?.friends));
+    } catch (error) {
+      if (error.response.status === 401) {
+        toast.error("Unauthorized!");
+        navigate("/login");
+      }
+    }
+  };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!friendList) {
+      fetchFreindList();
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   const { socket, disconnect } = createSocket();
+  // }, []);
 
   return (
     <div className="hidden sm:flex w-1/5 min-w-[220px] bg-[#252526] flex-col border-r border-[#333] shadow-md">
@@ -16,17 +45,20 @@ const LeftSideBar = ({ friends }) => {
 
       {/* Friend List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {friends?.map((f) => (
+        {friendList?.map((f) => (
           <div
-            key={f.id}
+            key={f._id}
             className="flex items-center gap-3 p-2 rounded-md hover:bg-[#2d2d30] cursor-pointer transition"
+            onClick={() => {
+              dispatch(addChat(f));
+            }}
           >
             <div className="avatar">
               <div className="w-10 h-10 rounded-full ring-2 ring-[#569cd6]">
-                <img src={f.photo} alt={f.name} />
+                <img src={f.photoUrl || AVATAR_DEFAULT_URL} alt={f.name} />
               </div>
             </div>
-            <span className="font-medium text-[#d4d4d4]">{f.name}</span>
+            <span className="font-medium text-[#d4d4d4]">{f.fullName}</span>
           </div>
         ))}
       </div>

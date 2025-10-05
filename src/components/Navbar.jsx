@@ -1,14 +1,15 @@
 import axios from "axios";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUser, FaHammer, FaCode, FaFileAlt } from "react-icons/fa";
 import { AVATAR_DEFAULT_URL } from "../constant/constant";
+import { resetRdeuxStoreOnLogout } from "../helpers/resetReduxStoreOnLogout";
 
 const Navbar = () => {
   const userData = useSelector((store) => store.user);
-
+  const dispatch = useDispatch();
   const handleLogout = async () => {
     try {
       const result = await axios.post(
@@ -18,6 +19,7 @@ const Navbar = () => {
           withCredentials: true,
         }
       );
+      resetRdeuxStoreOnLogout(dispatch);
       toast.success(result.data.message);
     } catch (error) {
       toast.error("An error Occured!");

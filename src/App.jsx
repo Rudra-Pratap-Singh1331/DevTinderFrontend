@@ -10,6 +10,7 @@ import Profile from "./components/UserProfile/Profile";
 import UpdateProfile from "./components/UserProfile/Profile";
 import MainComponent from "./components/MainComponent";
 import Devs from "./components/Devs";
+import CreatePost from "./components/CreatePost";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -35,6 +36,10 @@ const App = () => {
         {
           path: "/devs",
           element: <Devs />,
+        },
+        {
+          path: "/createPost",
+          element: <CreatePost />,
         },
       ],
     },
