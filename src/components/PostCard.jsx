@@ -1,17 +1,61 @@
 import { FaHeart, FaRegCommentDots, FaShareAlt } from "react-icons/fa";
 import { AVATAR_DEFAULT_URL } from "../constant/constant";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const PostCard = ({ post }) => {
   //fetching my photourl for comment purpose!!
 
   const user = useSelector((store) => store.user);
 
-  const { postContent, postPhotoUrl, createdAt, userId } = post;
-  const { designation, fullName, photoUrl, _id } = userId;
+  const {
+    postContent,
+    postPhotoUrl,
+    createdAt,
+    userId,
+    _id,
+    likesCount,
+    likedStatus,
+  } = post;
+  const { designation, fullName, photoUrl } = userId;
+  const [toggleLike, setToggleLike] = useState(likedStatus);
+  const [likeCount, setLikeCount] = useState(likesCount);
+
+  const handleLikeToggling = async () => {
+    //this is done because the setter function is async so if we use the value just after updateing the state we will be getting the older value only
+    const newToggleValue = !toggleLike;
+    if (newToggleValue) {
+      setLikeCount(likeCount + 1);
+    } else {
+      setLikeCount(likeCount - 1);
+    }
+    setToggleLike(newToggleValue);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:1001/posts/reactions",
+        {
+          _id,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      toast.success(res.message);
+    } catch (error) {
+      if (error.code === 11000) {
+        return toast.warning("post already Liked!");
+      }
+      toast.error(error?.response?.data?.data || "error occured!");
+    }
+  };
 
   //converting the mongodb time to local time
+
   const localtime = new Date(createdAt).toLocaleString();
+
   return (
     <div className="w-full max-w-2xl mx-auto bg-[#1e1e1e] border border-[#2d2d2d] rounded-xl shadow-md p-5 mt-6 transition-all duration-300 hover:shadow-lg hover:border-[#3a3a3a]">
       {/* Header */}
@@ -37,7 +81,7 @@ const PostCard = ({ post }) => {
           <img
             src={postPhotoUrl}
             alt="Post"
-            className="w-full object-cover hover:scale-[1.02] transition-transform duration-300"
+            className="w-full object-contain hover:scale-[1.02] transition-transform duration-300"
           />
         </div>
       ) : null}
@@ -48,10 +92,13 @@ const PostCard = ({ post }) => {
         // onClick={handleOnLike}
       >
         <button
-          className={`flex items-center gap-2 hover:text-blue-500 transition-colors`}
+          className={`flex items-center gap-2 hover:text-red-500 ${
+            toggleLike ? "text-red-500" : null
+          } transition-colors`}
+          onClick={handleLikeToggling}
         >
           {/* {like.count} */}
-          <FaHeart className="text-lg" /> Likes
+          <FaHeart className="text-lg" /> {likeCount}
         </button>
         <button className="flex items-center gap-2 hover:text-blue-500 transition-colors">
           <FaRegCommentDots className="text-lg" /> Comments
