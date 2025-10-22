@@ -1,4 +1,3 @@
-import React from "react";
 import { FaHeart, FaRegCommentDots, FaShareAlt } from "react-icons/fa";
 import { AVATAR_DEFAULT_URL } from "../constant/constant";
 import { useSelector } from "react-redux";
@@ -12,7 +11,6 @@ const PostCard = ({ post }) => {
   const { designation, fullName, photoUrl, _id } = userId;
 
   //converting the mongodb time to local time
-
   const localtime = new Date(createdAt).toLocaleString();
   return (
     <div className="w-full max-w-2xl mx-auto bg-[#1e1e1e] border border-[#2d2d2d] rounded-xl shadow-md p-5 mt-6 transition-all duration-300 hover:shadow-lg hover:border-[#3a3a3a]">
@@ -45,9 +43,15 @@ const PostCard = ({ post }) => {
       ) : null}
 
       {/* Actions */}
-      <div className="flex justify-around items-center border-t border-[#2f2f2f] pt-3 text-[#d1d5db]">
-        <button className="flex items-center gap-2 hover:text-blue-500 transition-colors">
-          <FaHeart className="text-lg" /> Like
+      <div
+        className="flex justify-around items-center border-t border-[#2f2f2f] pt-3 text-[#d1d5db]"
+        // onClick={handleOnLike}
+      >
+        <button
+          className={`flex items-center gap-2 hover:text-blue-500 transition-colors`}
+        >
+          {/* {like.count} */}
+          <FaHeart className="text-lg" /> Likes
         </button>
         <button className="flex items-center gap-2 hover:text-blue-500 transition-colors">
           <FaRegCommentDots className="text-lg" /> Comments

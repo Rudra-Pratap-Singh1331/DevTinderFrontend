@@ -1,7 +1,7 @@
-import React from 'react'
-import { AVATAR_DEFAULT_URL } from '../constant/constant';
+import React from "react";
+import { AVATAR_DEFAULT_URL } from "../constant/constant";
 
-const DevsCard = ({p}) => {
+const DevsCard = ({ p }) => {
   return (
     <>
       <div key={p.id} className="flex justify-center">
@@ -9,7 +9,7 @@ const DevsCard = ({p}) => {
           {/* Profile */}
           <div className="flex justify-center mt-6">
             <img
-              src={p.photoUrl || AVATAR_DEFAULT_URL }
+              src={p.photoUrl || AVATAR_DEFAULT_URL}
               alt="Profile"
               className="rounded-full w-32 h-32 object-cover border-4 border-[#569cd6]"
             />
@@ -77,6 +77,6 @@ const DevsCard = ({p}) => {
       </div>
     </>
   );
-}
+};
 
-export default DevsCard
+export default DevsCard;

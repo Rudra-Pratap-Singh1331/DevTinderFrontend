@@ -22,7 +22,7 @@ const Navbar = () => {
       resetRdeuxStoreOnLogout(dispatch);
       toast.success(result.data.message);
     } catch (error) {
-      toast.error("An error Occured!");
+      toast.error(error?.response?.data?.message || "Oops Error Occured!");
     }
   };
 

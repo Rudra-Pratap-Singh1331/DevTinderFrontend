@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AVATAR_DEFAULT_URL } from "../constant/constant";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   const userData = useSelector((store) => store.user);
@@ -17,7 +18,32 @@ const CreatePost = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("postContent", postDetails.postContent);
+      if (postDetails.postPhotoUrl) {
+        formData.append("postPhotoUrl", postDetails.postPhotoUrl); // same field name as multer.single()
+      }
+      formData.append("postVisibility", postDetails.postVisibility);
+
+      await axios.post("http://localhost:1001/posts/create", formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Post Created!");
+      navigate("/");
+    } catch (error) {
+      setLoading(false);
+      toast.error(error?.response?.data?.message || "error occured");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleOnChange = (e) => {
     console.log(e);
@@ -113,15 +139,23 @@ const CreatePost = () => {
           </div>
 
           {/* Create Post button */}
-          <button
-            type="submit"
-            className={`w-full py-2 rounded-md font-semibold ${
-              loading ? "bg-gray-600" : "bg-blue-600 hover:bg-blue-700"
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Creating..." : "Create Post"}
-          </button>
+          {loading ? (
+            <button type="button" class="bg-indigo-500 ..." disabled>
+              <svg
+                class="mr-3 size-5 animate-spin ..."
+                viewBox="0 0 24 24"
+              ></svg>
+              Processing…
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className={`w-full py-2 rounded-md font-semibold bg-blue-600 hover:bg-blue-700
+            `}
+            >
+              "Create Post"
+            </button>
+          )}
         </form>
       </div>
     </div>

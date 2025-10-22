@@ -37,39 +37,28 @@ const Devs = () => {
   }, []);
 
   return (
-    // <div className="flex h-screen w-full bg-[#1E1E1E] text-[#d4d4d4]">
-    //   {/* Left Sidebar */}
-    //   <LeftSideBar />
-
-    //   {/* Middle Section */}
-      <div className="flex-1 flex flex-col p-6">
-        {chat ? (
-          <ChatWindow chat={chat} />
-        ) : (
-          <div>
-            <h2 className="text-xl font-bold mb-6 text-[#569cd6]">
-              Developers
-            </h2>
-            {/* Developer Grid with scrollable container */}
-            <div
-              className="flex-1 overflow-y-auto pr-2"
-              style={{ maxHeight: "calc(100vh - 80px)" }}
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {loading
-                  ? Array(6)
-                      .fill(0)
-                      .map((_, i) => <DevShimmer key={i} />)
-                  : feed?.map((p) => <DevsCard key={p.id} p={p} />)}
-              </div>
+    <div className="flex-1 flex flex-col p-6">
+      {chat ? (
+        <ChatWindow chat={chat} />
+      ) : (
+        <div>
+          <h2 className="text-xl font-bold mb-6 text-[#569cd6]">Developers</h2>
+          {/* Developer Grid with scrollable container */}
+          <div
+            className="flex-1 overflow-y-auto pr-2"
+            style={{ maxHeight: "calc(100vh - 80px)" }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {loading
+                ? Array(6)
+                    .fill(0)
+                    .map((_, i) => <DevShimmer key={i} />)
+                : feed?.map((p) => <DevsCard key={p.id} p={p} />)}
             </div>
           </div>
-        )}
-      </div>
-
-    //   {/* Right Sidebar */}
-    //   <RightSideBar requests={requests} />
-    // </div>
+        </div>
+      )}
+    </div>
   );
 };
 

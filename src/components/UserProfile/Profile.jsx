@@ -74,8 +74,8 @@ const UpdateProfile = () => {
       dispatch(addUser(updatedUser?.data?.value));
       navigate("/");
     } catch (error) {
-      if (error.response.status === 401) return toast.error("Unauthorized!");
-      setFormError(error.response.data);
+      if (error.response?.status === 401) return toast.error("Unauthorized!");
+      setFormError(error.response?.data);
     }
   };
 

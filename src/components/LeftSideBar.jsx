@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { addFriends } from "../store/friendSlice";
 import { AVATAR_DEFAULT_URL } from "../constant/constant";
 import { addChat } from "../store/chatSlice";
-// import { createSocket } from "../constant/socketConnection";
+
 const LeftSideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,10 +31,6 @@ const LeftSideBar = () => {
       fetchFreindList();
     }
   }, []);
-
-  // useEffect(() => {
-  //   const { socket, disconnect } = createSocket();
-  // }, []);
 
   return (
     <div className="hidden sm:flex w-1/5 min-w-[220px] bg-[#252526] flex-col border-r border-[#333] shadow-md">
