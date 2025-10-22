@@ -1,7 +1,7 @@
 import { removeChat } from "../store/chatSlice";
 import { removeUser } from "../store/userSlice";
 import { removeFriend } from "../store/friendSlice";
-import React from "react";
+
 
 export const resetRdeuxStoreOnLogout = (dispatch) => {
   dispatch(removeChat());
