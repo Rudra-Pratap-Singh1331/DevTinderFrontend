@@ -5,7 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, setShowCommentBoxStatus, showCommentBox }) => {
   //fetching my photourl for comment purpose!!
 
   const user = useSelector((store) => store.user);
@@ -19,9 +19,11 @@ const PostCard = ({ post }) => {
     likesCount,
     likedStatus,
   } = post;
+
   const { designation, fullName, photoUrl } = userId;
   const [toggleLike, setToggleLike] = useState(likedStatus);
   const [likeCount, setLikeCount] = useState(likesCount);
+  const [comment, setComment] = useState("");
 
   const handleLikeToggling = async () => {
     //this is done because the setter function is async so if we use the value just after updateing the state we will be getting the older value only
@@ -49,6 +51,23 @@ const PostCard = ({ post }) => {
         return toast.warning("post already Liked!");
       }
       toast.error(error?.response?.data?.data || "error occured!");
+    }
+  };
+
+  const handleSubmitComment = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:1001/posts/addcomment",
+        {
+          postId: _id,
+          commentData: comment,
+        },
+        { withCredentials: true }
+      );
+      toast.success(res?.data?.message);
+      setComment("");
+    } catch (error) {
+      toast.error(error?.response?.data?.data || "Oops Error Occured!");
     }
   };
 
@@ -100,7 +119,14 @@ const PostCard = ({ post }) => {
           {/* {like.count} */}
           <FaHeart className="text-lg" /> {likeCount}
         </button>
-        <button className="flex items-center gap-2 hover:text-blue-500 transition-colors">
+        <button
+          className="flex items-center gap-2 hover:text-blue-500 transition-colors"
+          onClick={() => {
+            setShowCommentBoxStatus(() => {
+              return {showCommentBoxStatus:!showCommentBox.showCommentBoxStatus , postId:_id}
+            });
+          }}
+        >
           <FaRegCommentDots className="text-lg" /> Comments
         </button>
         <button className="flex items-center gap-2 hover:text-blue-500 transition-colors">
@@ -114,7 +140,16 @@ const PostCard = ({ post }) => {
         <input
           type="text"
           placeholder="Write a comment..."
+          value={comment}
           className="input input-sm w-full bg-[#252526] border border-[#2d2d2d] text-[#e5e5e5] placeholder:text-[#9ca3af] focus:outline-none focus:border-blue-500"
+          onChange={(e) => {
+            setComment(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key == "Enter") {
+              handleSubmitComment();
+            }
+          }}
         />
       </div>
     </div>
