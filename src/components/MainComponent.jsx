@@ -1,26 +1,27 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import LeftSideBar from "./leftSideBar";
-import RightSideBar from "./RightSideBar";
 import ChatWindow from "./ChatWindow";
 import PostCard from "./PostCard";
 import useFetchPost from "../hooks/useFetchPost";
 import PostShimmer from "./Shimmer/PostShimmer";
+import CommentSection from "./CommentSection";
 
 const MainComponent = () => {
-  // Dummy data
   const chat = useSelector((store) => store.chat);
-
-  //custom hook for fetching;
-
   const { post, isloading } = useFetchPost();
+  const [showCommentBox, setShowCommentBoxStatus] = useState({
+    showCommentBoxStatus: false,
+    postId: "",
+  });
 
   return (
-    // <div className="flex h-screen w-full bg-[#1E1E1E] text-[#d4d4d4]">
-    //   {/* Left Sidebar */}
-    //   <LeftSideBar />
-
-    //   {/* Middle Section */}
-    <div className="flex-1 overflow-y-auto p-6">
+    <div className="flex-1 overflow-y-auto p-6 relative">
+      {showCommentBox.showCommentBoxStatus ? (
+        <CommentSection
+          setShowCommentBoxStatus={setShowCommentBoxStatus}
+          showCommentBox={showCommentBox}
+        />
+      ) : null}
       {chat ? (
         <ChatWindow chat={chat} />
       ) : isloading ? (
@@ -31,14 +32,16 @@ const MainComponent = () => {
           })
       ) : (
         post?.map((post) => {
-          return <PostCard post={post} />;
+          return (
+            <PostCard
+              post={post}
+              setShowCommentBoxStatus={setShowCommentBoxStatus}
+              showCommentBox={showCommentBox}
+            />
+          );
         })
       )}
     </div>
-
-    /* Right Sidebar
-      <RightSideBar requests={requests} />
-    </div> */
   );
 };
 
