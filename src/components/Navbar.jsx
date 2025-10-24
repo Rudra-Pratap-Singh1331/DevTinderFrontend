@@ -94,9 +94,6 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <a className="hover:text-[#569cd6]">Settings</a>
-            </li>
-            <li>
               <Link
                 to="/login"
                 onClick={handleLogout}
