@@ -1,25 +1,59 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AVATAR_DEFAULT_URL } from "../constant/constant";
 import { removeChat } from "../store/chatSlice";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { createSocket } from "../constant/socketConnection";
+import useFetchChat from "../hooks/useFetchChat";
+import { formatTime } from "../helpers/formatTime";
 const ChatWindow = ({ chat }) => {
   const { _id, fullName, photoUrl } = chat;
   const dispatch = useDispatch();
-  const [messages, setMessages] = useState([
-    { sender: "friend", text: "Hey! How are you?" },
-    { sender: "me", text: "I'm good, you?" },
-  ]);
+
+  const user = useSelector((store) => store.user);
+  const userId = user._id;
+  const { messages, setMessages, loading } = useFetchChat(_id);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
-
+  const socketRef = useRef(null);
+  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Initialize socket
+
+  useEffect(() => {
+    const { socket, disconnect } = createSocket();
+    socketRef.current = socket;
+    // Join chat room
+    socketRef.current.emit("joinChat", { userId, _id });
+
+    // Listen for incoming messages
+    socketRef.current.on("messageReceived", ({ text, time, userId }) => {
+      setMessages((prev) => [...prev, { text, time, fromUserId: userId }]); // mark as received
+    });
+
+    return () => disconnect();
+  }, [userId, _id]);
+
+  // Send a message
   const sendMessage = () => {
     if (newMessage.trim() === "") return;
-    setMessages([...messages, { sender: "me", text: newMessage }]);
+    const currHour = new Date().getHours();
+    const currminute = new Date().getMinutes();
+    const formattedTime = `${currHour % 12 || 12}:${currminute
+      .toString()
+      .padStart(2, "0")} ${currHour >= 12 ? "PM" : "AM"}`;
+    setMessages((prev) => [
+      ...prev,
+      { text: newMessage, time: formattedTime, fromUserId: userId },
+    ]);
+    socketRef.current.emit("sendMessage", {
+      userId,
+      _id,
+      text: newMessage,
+      time: formattedTime,
+    });
     setNewMessage("");
   };
 
@@ -49,24 +83,44 @@ const ChatWindow = ({ chat }) => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`chat ${
-              msg.sender === "me" ? "chat-end" : "chat-start"
-            }`}
-          >
+        {loading ? (
+          <p className="text-center text-gray-500">Loading Your Chats..</p>
+        ) : messages.length === 0 ? (
+          <p className="text-center text-gray-500">
+            Start your first Conversation!
+          </p>
+        ) : (
+          messages.map((msg, index) => (
             <div
-              className={`chat-bubble ${
-                msg.sender === "me"
-                  ? "bg-[#0a84ff] text-white"
-                  : "bg-[#3a3d41] text-gray-200"
+              key={index}
+              className={`chat ${
+                msg.fromUserId === userId ? "chat-end" : "chat-start"
               }`}
             >
-              {msg.text}
+              <div
+                className={`chat-bubble max-w-[70%] break-words whitespace-pre-wrap shadow-md rounded-2xl
+            ${
+              msg.self
+                ? "bg-gradient-to-r from-[#4f46e5] to-[#6366f1] text-gray-100"
+                : "bg-[#1f2024] text-gray-100"
+            }`}
+              >
+                {msg.text}
+                <span
+                  className={`text-[10px] font-extralight ml-2 block text-right ${
+                    msg.self ? "text-gray-300" : "text-gray-400"
+                  }`}
+                >
+                  {msg.time
+                    ? msg.time
+                    : msg.createdAt
+                    ? formatTime(msg.createdAt)
+                    : null}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
 
